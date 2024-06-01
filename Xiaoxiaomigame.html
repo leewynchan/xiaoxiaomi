@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我们在一起的第1,880天</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .game-container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #ff66b2;
+        }
+        .title a {
+            text-decoration: none;
+            color: #ff66b2;
+        }
+        .title a:visited {
+            color: #ff66b2;
+        }
+        .text {
+            margin-bottom: 20px;
+        }
+        .choices {
+            display: flex;
+            flex-direction: column;
+        }
+        .choice {
+            background-color: #ff66b2;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .choice:hover {
+            background-color: #ff3385;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+<!--        <div class="title">我们在一起的第1,880天</div>-->
+        <div class="title"><a href="https://i.ibb.co/ZKmFRwf/XiaoMIMI.jpg" target="_blank">我们在一起的第1,880天 ←点我哦！！</a></div>
+        <div class="text" id="gameText">
+            你是一个开朗的小女孩小美，今天刚刚下班，发现了这神奇的入口。你决定怎么做？
+        </div>
+        <div class="choices" id="choices">
+            <button class="choice" onclick="makeChoice(0)">进入入口</button>
+            <button class="choice" onclick="makeChoice(1)">忽略它，回家</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+
+        const story = [
+            {
+                text: '你是一个开朗的小女孩小美，今天刚刚下班，发现了这神奇的入口。你决定怎么做？',
+                choices: [
+                    { text: '进入入口', next: 2 },
+                    { text: '忽略它，回家', next: 1 }
+                ]
+            },
+            {
+                text: '你决定回家，发现男朋友为你准备了惊喜晚餐，你们一起度过了愉快的夜晚。你决定怎么做？',
+                choices: [
+                    { text: '感谢他', next: 3 },
+                    { text: '一起看电影', next: 4 }
+                ]
+            },
+            {
+                text: '你进入了入口，发现自己来到了一片美丽的花海。你决定怎么做？',
+                choices: [
+                    { text: '欣赏花海', next: 5 },
+                    { text: '采摘鲜花', next: 6 }
+                ]
+            },
+            {
+                text: '你感谢了男朋友的用心，他笑着说这是为了让你开心。你们决定怎么度过接下来的时光？',
+                choices: [
+                    { text: '一起做饭', next: 7 },
+                    { text: '一起散步', next: 8 }
+                ]
+            },
+            {
+                text: '你们一起看了一部浪漫的电影，感受到浓浓的爱意。你们决定接下来做什么？',
+                choices: [
+                    { text: '一起散步', next: 8 },
+                    { text: '谈论未来', next: 9 }
+                ]
+            },
+            {
+                text: '你在花海中徜徉，感受到自然的美好。突然，你发现了一条小路。你决定怎么做？',
+                choices: [
+                    { text: '沿着小路走', next: 10 },
+                    { text: '留在花海', next: 11 }
+                ]
+            },
+            {
+                text: '你采摘了一些鲜花，感受到阵阵芳香。你决定把花带回家送给男朋友。你决定怎么做？',
+                choices: [
+                    { text: '带回家', next: 12 },
+                    { text: '留在花海', next: 11 }
+                ]
+            },
+            {
+                text: '你们一起做了一顿美味的晚餐，享受着烹饪的乐趣。饭后，你们决定做什么？',
+                choices: [
+                    { text: '一起散步', next: 8 },
+                    { text: '一起看星星', next: 13 }
+                ]
+            },
+            {
+                text: '你们手牵手散步，感受到彼此的温暖。你们谈论着未来的计划，感到既兴奋又有些不安。你们决定怎么做？',
+                choices: [
+                    { text: '继续走', next: 14 },
+                    { text: '坐下来聊', next: 15 }
+                ]
+            },
+            {
+                text: '你们开始谈论未来，男朋友提到了你签证的问题。你们都感到不舍，但决定一起面对。你们决定怎么做？',
+                choices: [
+                    { text: '找解决办法', next: 16 },
+                    { text: '享受当下', next: 17 }
+                ]
+            },
+            {
+                text: '你沿着小路走，发现了一片更美丽的景色。你决定怎么做？',
+                choices: [
+                    { text: '继续探索', next: 18 },
+                    { text: '回去花海', next: 11 }
+                ]
+            },
+            {
+                text: '你决定留在花海，享受这片宁静与美好。你感受到内心的平静。你决定怎么做？',
+                choices: [
+                    { text: '回家', next: 19 },
+                    { text: '继续享受', next: 20 }
+                ]
+            },
+            {
+                text: '你把花带回家送给男朋友，他非常开心。你们决定怎么度过这个夜晚？',
+                choices: [
+                    { text: '一起做饭', next: 7 },
+                    { text: '一起散步', next: 8 }
+                ]
+            },
+            {
+                text: '你们一起看星星，感受到彼此的爱意。你们决定怎么做？',
+                choices: [
+                    { text: '许下心愿', next: 21 },
+                    { text: '互相倾诉', next: 22 }
+                ]
+            },
+            {
+                text: '你们继续散步，发现了一家漂亮的咖啡馆。你们决定进去吗？',
+                choices: [
+                    { text: '进去', next: 23 },
+                    { text: '继续散步', next: 24 }
+                ]
+            },
+            {
+                text: '你们坐下来聊，感受到彼此的心意更加贴近。你们决定怎么做？',
+                choices: [
+                    { text: '互相倾诉', next: 22 },
+                    { text: '计划未来', next: 25 }
+                ]
+            },
+            {
+                text: '你们一起找解决办法，发现有一些新的签证选项。你们决定怎么做？',
+                choices: [
+                    { text: '申请新签证', next: 26 },
+                    { text: '考虑其他选择', next: 27 }
+                ]
+            },
+            {
+                text: '你们决定享受当下，珍惜每一刻的相处时光。你们决定怎么做？',
+                choices: [
+                    { text: '计划短途旅行', next: 28 },
+                    { text: '一起做喜欢的事情', next: 29 }
+                ]
+            },
+            {
+                text: '你继续探索，发现了一座漂亮的小木屋。你决定进去看看吗？',
+                choices: [
+                    { text: '进去看看', next: 30 },
+                    { text: '继续探索', next: 31 }
+                ]
+            },
+            {
+                text: '你决定回家，发现男朋友为你准备了惊喜晚餐。你们一起度过了愉快的夜晚。你决定怎么做？',
+                choices: [
+                    { text: '感谢他', next: 3 },
+                    { text: '一起看电影', next: 4 }
+                ]
+            },
+            {
+                text: '你继续享受花海的美好，感受到内心的平静。你决定怎么做？',
+                choices: [
+                    { text: '回家', next: 19 },
+                    { text: '继续享受', next: 20 }
+                ]
+            },
+            {
+                text: '你们许下心愿，希望能够永远在一起。你们决定怎么做？',
+                choices: [
+                    { text: '计划未来', next: 25 },
+                    { text: '享受当下', next: 17 }
+                ]
+            },
+            {
+                text: '你们互相倾诉，感受到彼此的爱意更加浓厚。你们决定怎么做？',
+                choices: [
+                    { text: '计划未来', next: 25 },
+                    { text: '享受当下', next: 17 }
+                ]
+            },
+            {
+                text: '你们进入了咖啡馆，享受了一杯美味的咖啡，感受到一丝宁静。你们决定怎么做？',
+                choices: [
+                    { text: '继续散步', next: 24 },
+                    { text: '谈论未来', next: 9 }
+                ]
+            },
+            {
+                text: '你们继续散步，享受彼此的陪伴。你们决定怎么做？',
+                choices: [
+                    { text: '回家', next: 19 },
+                    { text: '继续走', next: 14 }
+                ]
+            },
+            {
+                text: '你们计划未来，发现了很多新的可能性。你们决定怎么做？',
+                choices: [
+                    { text: '申请新签证', next: 26 },
+                    { text: '考虑其他选择', next: 27 }
+                ]
+            },
+            {
+                text: '你们申请了新签证，等待结果的过程中，感受到彼此的依靠和支持。你们决定怎么做？',
+                choices: [
+                    { text: '继续等待', next: 32 },
+                    { text: '计划旅行', next: 28 }
+                ]
+            },
+            {
+                text: '你们考虑了其他选择，发现有很多新的可能性。你们决定怎么做？',
+                choices: [
+                    { text: '回国一起生活', next: 33 },
+                    { text: '继续寻找机会', next: 34 }
+                ]
+            },
+            {
+                text: '你们计划了一次短途旅行，享受了很多美好的时光。你们决定怎么做？',
+                choices: [
+                    { text: '继续旅行', next: 35 },
+                    { text: '回家休息', next: 36 }
+                ]
+            },
+            {
+                text: '你们一起做喜欢的事情，感受到彼此的幸福和满足。你们决定怎么做？',
+                choices: [
+                    { text: '一起做饭', next: 7 },
+                    { text: '一起看星星', next: 13 }
+                ]
+            },
+            {
+                text: '你进入了小木屋，发现里面充满了温馨的装饰。你决定怎么做？',
+                choices: [
+                    { text: '在里面休息', next: 37 },
+                    { text: '继续探索', next: 31 }
+                ]
+            },
+            {
+                text: '你继续探索，发现了更多的美丽风景。你决定怎么做？',
+                choices: [
+                    { text: '回家', next: 19 },
+                    { text: '继续享受', next: 20 }
+                ]
+            },
+            {
+                text: '你们继续等待签证结果，感受到彼此的支持和依靠。最终，你们成功拿到了签证，决定怎么做？',
+                choices: [
+                    { text: '庆祝', next: 38 },
+                    { text: '计划未来', next: 25 }
+                ]
+            },
+            {
+                text: '你们决定回国一起生活，开始了一段新的旅程。你们决定怎么做？',
+                choices: [
+                    { text: '计划未来', next: 25 },
+                    { text: '享受当下', next: 17 }
+                ]
+            },
+            {
+                text: '你们继续寻找机会，发现了更多的可能性。你们决定怎么做？',
+                choices: [
+                    { text: '申请新签证', next: 26 },
+                    { text: '考虑其他选择', next: 27 }
+                ]
+            },
+            {
+                text: '你们继续旅行，享受了更多美好的时光。你们决定怎么做？',
+                choices: [
+                    { text: '继续旅行', next: 35 },
+                    { text: '回家休息', next: 36 }
+                ]
+            },
+            {
+                text: '你们回家休息，享受了一个安静的夜晚。你们决定怎么做？',
+                choices: [
+                    { text: '一起做饭', next: 7 },
+                    { text: '一起看星星', next: 13 }
+                ]
+            },
+            {
+                text: '你在小木屋里休息，感受到一丝宁静和温馨。你决定怎么做？',
+                choices: [
+                    { text: '回家', next: 19 },
+                    { text: '继续享受', next: 20 }
+                ]
+            },
+            {
+                text: '你们庆祝了签证的成功，感受到彼此的爱意更加浓厚。你们决定怎么做？',
+                choices: [
+                    { text: '计划未来', next: 25 },
+                    { text: '享受当下', next: 17 }
+                ]
+            }
+        ];
+
+        function makeChoice(choiceIndex) {
+            const choice = story[currentStep].choices[choiceIndex];
+            currentStep = choice.next;
+            renderStory();
+        }
+
+        function renderStory() {
+            const gameText = document.getElementById('gameText');
+            const choicesContainer = document.getElementById('choices');
+
+            gameText.textContent = story[currentStep].text;
+
+            choicesContainer.innerHTML = '';
+            story[currentStep].choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.className = 'choice';
+                button.textContent = choice.text;
+                button.onclick = () => makeChoice(index);
+                choicesContainer.appendChild(button);
+            });
+        }
+
+        renderStory();
+    </script>
+</body>
+</html>
